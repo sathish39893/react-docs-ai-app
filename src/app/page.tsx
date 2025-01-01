@@ -3,11 +3,18 @@
 import { useChat } from 'ai/react';
 import { ChatMessage } from '@/components/ChatMessage/ChatMessage';
 import { Button } from '@/components/Button/Button';
+import { useEffect, useRef } from 'react';
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     maxSteps: 10,
   });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   return (
     <div
       id="chat-container"
@@ -18,17 +25,17 @@ export default function Chat() {
     >
       <div className="flex flex-col space-y-1.5 pb-6 ">
         <h2 className="font-semibold text-lg tracking-tight text-zinc-800">
-          React Document Chatbot
+          ReactJS Documents Assistant
         </h2>
         <p className="text-sm text-[#6b7280] leading-3">
-          Powered by React Docs and Vercel ai
+          Powered by react.dev and Vercel ai
         </p>
       </div>
-      <div className="h-[634px] overflow-y-auto">
+      <div className="h-[600px] overflow-y-auto">
         <div
           className="pr-4 h-[474px] overflow-y-auto"
           id="chat-messages"
-          style={{ minWidth: '100%', display: 'table' }}
+          style={{ minWidth: '100%', display: 'table'}}
           scroll-behavior="smooth"
         >
           {messages.map((m) => (
@@ -42,6 +49,7 @@ export default function Chat() {
               }
             />
           ))}
+          <div id="anchor" ref={messagesEndRef} ></div>
         </div>
       </div>
       <div className="flex items-center pt-5">

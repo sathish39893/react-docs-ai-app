@@ -1,9 +1,10 @@
-// drizzle.config.ts
-import { defineConfig } from "drizzle-kit";
+import type { Config } from "drizzle-kit";
+import { env } from "@/lib/env.mjs";
 
-export default defineConfig({
+export default {
+  schema: "./src/lib/db/schema",
   dialect: "postgresql",
   dbCredentials: {
-    url: 'postgres://ai:ai@localhost:5532/ai'
-  },
-});
+    url: env.DATABASE_URL,
+  }
+} satisfies Config;
