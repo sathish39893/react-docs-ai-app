@@ -16,55 +16,57 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div
-      id="chat-container"
-      style={{
-        boxShadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)',
-      }}
-      className="flex flex-col mx-10 my-5 bg-white p-6 rounded-lg border border-[#e5e7eb] "
-    >
-      <div className="flex flex-col space-y-1.5 pb-6 ">
-        <h2 className="font-semibold text-lg tracking-tight text-zinc-800">
-          ReactJS Documents Assistant
-        </h2>
-        <p className="text-sm text-[#6b7280] leading-3">
-          Powered by react.dev and Vercel ai
-        </p>
-      </div>
-      <div className="h-[600px] overflow-y-auto">
-        <div
-          className="pr-4 h-[474px] overflow-y-auto"
-          id="chat-messages"
-          style={{ minWidth: '100%', display: 'table'}}
-          scroll-behavior="smooth"
-        >
-          {messages.map((m) => (
-            <ChatMessage
-              key={m.id}
-              role={m.role}
-              message={
-                m.content.length > 0
-                  ? m.content
-                  : `calling tool:  ${m?.toolInvocations?.[0].toolName}`
-              }
-            />
-          ))}
-          <div id="anchor" ref={messagesEndRef} ></div>
+    <div className="flex flex-col w-full">
+      <div
+        id="chat-container"
+        style={{
+          boxShadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)',
+        }}
+        className="flex flex-col mx-10 my-5 bg-white p-6 rounded-lg border border-[#e5e7eb] "
+      >
+        <div className="flex flex-col space-y-1.5 pb-6 ">
+          <h2 className="font-semibold text-lg tracking-tight text-zinc-800">
+            ReactJS Documents Assistant
+          </h2>
+          <p className="text-sm text-[#6b7280] leading-3">
+            Powered by react.dev and Vercel ai
+          </p>
         </div>
-      </div>
-      <div className="flex items-center pt-5">
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center justify-center w-full space-x-2"
-        >
-          <input
-            className="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
-            placeholder="Ask any question related to react js"
-            value={input}
-            onChange={handleInputChange}
-          />
-          <Button label="Send" type="submit" onClick={handleSubmit} />
-        </form>
+        <div className="h-[600px] overflow-y-auto">
+          <div
+            className="pr-4 h-[600px] overflow-y-auto"
+            id="chat-messages"
+            style={{ display: 'table' }}
+            scroll-behavior="smooth"
+          >
+            {messages.map((m) => (
+              <ChatMessage
+                key={m.id}
+                role={m.role}
+                message={
+                  m.content.length > 0
+                    ? m.content
+                    : `calling tool:  ${m?.toolInvocations?.[0].toolName}`
+                }
+              />
+            ))}
+            <div id="anchor" ref={messagesEndRef}></div>
+          </div>
+        </div>
+        <div className="flex items-center min-w-full pt-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex w-full justify-center space-x-2"
+          >
+            <input
+              className="flex w-full h-10 rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
+              placeholder="Ask any question related to react js"
+              value={input}
+              onChange={handleInputChange}
+            />
+            <Button label="Send" type="submit" onClick={handleSubmit} />
+          </form>
+        </div>
       </div>
     </div>
   );
