@@ -6,7 +6,7 @@ import { Button } from '@/components/Button/Button';
 import { useEffect, useRef } from 'react';
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, error } = useChat({
     maxSteps: 10,
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -39,20 +39,48 @@ export default function Chat() {
             style={{ display: 'table' }}
             scroll-behavior="smooth"
           >
-            {messages.map((m) => (
-              <ChatMessage
-                key={m.id}
-                role={m.role}
-                message={
-                  m.content.length > 0
-                    ? m.content
-                    : `calling tool:  ${m?.toolInvocations?.[0].toolName}`
+            {messages.map(({content, id, role, toolInvocations}) => (
+              <div key={id}>
+                {
+                  content.length > 0 && (
+                    <ChatMessage
+                      key={id}
+                      role={role}
+                      message={content}
+                    />
+                  )
                 }
-              />
+                {
+                  toolInvocations?.map((toolInvocation) => {
+                    const { toolName, toolCallId, state } = toolInvocation;
+                    if (state === 'result') {
+                      if (toolName === 'displayWeather') {
+                        const { result } = toolInvocation;
+                        return (
+                          <div key={toolCallId}>
+                            <ChatMessage {...result} />
+                          </div>
+                        );
+                      }
+                    } else {
+                      return (
+                        <div key={toolCallId}>
+                          {toolName === 'getInformation' ? (
+                            <div className='text-gray-600 text-sm'>Loading answers...</div>
+                          ) : null}
+                        </div>
+                      );
+                    }
+                  })
+                }
+              </div>
             ))}
             <div id="anchor" ref={messagesEndRef}></div>
           </div>
         </div>
+        {error && (
+          <div className="text-red-500 text-sm mt-2">{error?.message}</div>
+        )}
         <div className="flex items-center min-w-full pt-5">
           <form
             onSubmit={handleSubmit}
