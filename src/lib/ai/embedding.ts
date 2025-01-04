@@ -5,6 +5,7 @@ import { cosineDistance, desc, gt, sql } from 'drizzle-orm';
 import { resources } from '../db/schema/resources';
 
 const embeddingModel = openai.embedding('text-embedding-ada-002');
+const similarityThreshold = 0.7;
 
 const generateChunks = (input: string): string[] => {
   return input
@@ -22,6 +23,16 @@ export const generateEmbeddings = async (
     values: chunks,
   });
   return embeddings.map((e, i) => ({ content: chunks[i], embedding: e }));
+};
+
+export const generateMultipleEmbeddings = async (
+  values: string[],
+): Promise<Array<{ embedding: number[]; content: string }>> => {
+  const { embeddings } = await embedMany({
+    model: embeddingModel,
+    values: values,
+  });
+  return embeddings.map((e, i) => ({ content: values[i], embedding: e }));
 };
 
 export const generateEmbedding = async (value: string): Promise<number[]> => {
@@ -42,7 +53,7 @@ export const findRelevantContent = async (userQuery: string) => {
   const similarGuides = await db
     .select({ name: resources.content, similarity })
     .from(resources)
-    .where(gt(similarity, 0.5))
+    .where(gt(similarity, similarityThreshold))
     .orderBy(t => desc(t.similarity))
     .limit(4);
   return similarGuides;

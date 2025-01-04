@@ -18,9 +18,6 @@ export const resources = pgTable(
     id: varchar('id', { length: 191 })
       .primaryKey()
       .$defaultFn(() => nanoid()),
-
-    content: text('content').notNull(),
-
     createdAt: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
@@ -28,6 +25,9 @@ export const resources = pgTable(
     updatedAt: timestamp('updated_at')
       .notNull()
       .default(sql`now()`),
+    
+    content: text('content').notNull(),
+    source: text('source').notNull(),
     embedding: vector('embedding', { dimensions: 1536 }).notNull(),
   },
   (table) => [
