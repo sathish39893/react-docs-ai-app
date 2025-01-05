@@ -53,16 +53,7 @@ export default function Chat() {
                 {
                   toolInvocations?.map((toolInvocation) => {
                     const { toolName, toolCallId, state } = toolInvocation;
-                    if (state === 'result') {
-                      if (toolName === 'displayWeather') {
-                        const { result } = toolInvocation;
-                        return (
-                          <div key={toolCallId}>
-                            <ChatMessage {...result} />
-                          </div>
-                        );
-                      }
-                    } else {
+                    if (state !== 'result') {
                       return (
                         <div key={toolCallId}>
                           {toolName === 'getInformation' ? (
